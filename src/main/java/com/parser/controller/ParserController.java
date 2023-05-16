@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.parser.service.ParserService;
 import com.parser.wrapper.ResponseWrapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 
 @RestController
@@ -22,6 +24,7 @@ public class ParserController {
 	@Autowired
 	private ParserService parserService;
 
+	@Operation(summary = "parser file")
 	@PostMapping(value="/upload", consumes = {
 		      "multipart/form-data"
 	   })
