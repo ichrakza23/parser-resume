@@ -6,77 +6,57 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.parser.enums.RegEx;
+import com.parser.models.Experience;
+import com.parser.models.Section;
+
+import jakarta.validation.constraints.AssertFalse.List;
+
 public class ExtractUtils {
-	static Pattern emailPattern = Pattern.compile("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
-	static Pattern phonePattern = Pattern.compile("(\\+\\d{1,3})?\\s*\\(?\\d{1,4}\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{2,9}");
-//	static Pattern addressPattern = Pattern.compile("^(\\d+\\s+)?\\b[a-zA-Z0-9]+\\b(\\s+\\b[a-zA-Z0-9]+\\b)*\\s*,\\s*\\b[a-zA-Z]+\\b(\\s+\\b[a-zA-Z]+\\b)*\\s*,\\s*\\b[a-zA-Z0-9]+\\b(\\s+\\b[a-zA-Z0-9]+\\b)*\\s*\\d*$");
-//	static Pattern namePattern = Pattern.compile("([A-Z][a-z]+)\\s+([A-Z][a-z]+)");
-	static Pattern addressPattern = Pattern.compile("\\b\\d+\\s+([a-zA-Z]+\\s*)+(\\,\\s*[a-zA-Z]+\\s*)+\\b");
+	public static Pattern emailPattern = Pattern.compile(RegEx.EMAIL.toString());
+	public static Pattern phonePattern = Pattern.compile(RegEx.PHONE.toString());
+	public static Pattern addressPattern = Pattern.compile(RegEx.ADDRESS.toString());
+	public static Pattern namePattern = Pattern.compile(RegEx.NAME.toString());
+	public static Pattern experiencePattern = Pattern.compile(RegEx.EXPERIENCE.toString());
+	public static Pattern educationPattern = Pattern.compile(RegEx.EDUCATION.toString());
+	public static Pattern hobbiesPattern = Pattern.compile(RegEx.INTERESTS.toString());
+	public static Pattern skillsPattern = Pattern.compile(RegEx.SKILLS.toString());
+	public static Pattern languagesPattern = Pattern.compile(RegEx.LANGUAGES.toString());
+	public static Pattern personalProjectsPattern = Pattern.compile(RegEx.PERSONALPROJECTS.toString());
+	public static Pattern certificationsPattern = Pattern.compile(RegEx.CERTIFICATIONS.toString());
+	public static Pattern scoresPattern = Pattern.compile(RegEx.SCORES.toString());
+	public static Pattern datePattern = Pattern.compile(RegEx.DATEFROMTO.toString());
 
-	static Pattern namePattern = Pattern.compile("\\b[A-Z][a-zA-Z']+\\b");
+	public static String extractInfo(String content, Pattern pattern) {
+		Matcher patternMatcher = pattern.matcher(content);
+		 String info="";
+		if (patternMatcher.find()) {
+		    info= patternMatcher.group();
+		}
+		return info;
+	}
 
-//	public static Pattern experiencePattern = Pattern.compile("WORK EXPERIENCE|EXPERIENCE|Experience|Work History|Employment");
-	public static Pattern experiencePattern = Pattern.compile("\\b(Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY)\\b");
-	public static Pattern educationPattern = Pattern.compile("EDUCATION|ACADEMIC QUALIFICATIONS");
-	public static Pattern hobbiesPattern = Pattern.compile("CENTRESD’INTÉRÊTS|INTERESTS");
-	public static Pattern skillsPattern = Pattern.compile("COMPETENCES|SKILLS|COMPÉTENCES|Skills & Expertise|Expertise|AREAS OF EXPERTISE");
-	public static Pattern languagesPattern = Pattern.compile("LANGUES|LANGUAGES");
-	public static Pattern personalProjectsPattern = Pattern.compile("PROJECTS|PERSONAL PROJECTS");
-	public static Pattern certificationsPattern = Pattern.compile("CERTIFICATIONS|CÉRTIFICATS|CERTIFICATS");
-	public static Pattern scoresPattern = Pattern.compile("TEST SCORES|SCORES");
+    public static String extractSection(String cvText, String section ) {
+		Map<String, Integer> orderedSections = getOrderedSectionsByIndex(cvText);
+        Integer startIndex = orderedSections.get(section);
+        Section nextSection= new Section();
+    	try {
+    		nextSection= getnextSection(orderedSections, section );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	Integer endIndex=nextSection!=null? nextSection.getIndex():-1;
+        if(startIndex!=null &&startIndex!=-1   &&endIndex==-1 )
+        	return cvText.substring(startIndex, cvText.length()-1);
+	    if (startIndex!=null && startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+	    	String sectionContent = cvText.substring(startIndex, endIndex);
+	    	int lastInline = sectionContent.lastIndexOf("\n");
+		if(lastInline!=-1) 
+			return sectionContent.substring(0, lastInline);
+		
+		return sectionContent;
 
-	public static String extractEmail(String content) {
-		Matcher emailMatcher = emailPattern.matcher(content);
-		 String email="";
-		if (emailMatcher.find()) {
-		    email= emailMatcher.group();
-		}
-		return email;
-	}
-	
-	public static String extractPhone(String content) {
-		Matcher phoneMatcher = phonePattern.matcher(content);
-		 String phone="";
-		if (phoneMatcher.find()) {
-			phone= phoneMatcher.group();
-		}
-		return phone;
-	}
-	public static String extractName(String content) {
-		Matcher nameMatcher = namePattern.matcher(content);
-		 String name="";
-		if (nameMatcher.find()) {
-			    name=nameMatcher.group();
-			    }
-		return name;
-	}
-	public static String extractAddress(String content) {
-		Matcher addressMatcher = addressPattern.matcher(content);
-		 String address="";
-		if (addressMatcher.find()) {
-			address=addressMatcher.group();
-			    }
-		return address;
-	}
-    public static String extractSection(String cvText, Pattern startPattern, Pattern endPattern) {
-//	    int startIndex = cvText.toUpperCase().indexOf(startPattern.toUpperCase());
-//	    int endIndex = cvText.toUpperCase().indexOf(endPattern.toUpperCase(), startIndex + startPattern.length());
-//	    int endIndex = cvText.toUpperCase().indexOf("CENTRESD’INTÉRÊTS".toUpperCase());
-    	Matcher startMatcher = startPattern.matcher(cvText);
-    	int startIndex=-1;
-    	int endIndex=-1;
-		if (startMatcher.find()) {
-			startIndex=startMatcher.end();
-			}
-		if(startIndex==-1) return "";
-       if(startIndex!=-1 &&endPattern==null )
-    	   return cvText.substring(startIndex, cvText.length()-1);
-		Matcher endMatcher = endPattern.matcher(cvText);
-		if (endMatcher.find()) {
-		     endIndex = endMatcher.end();
-		}
-	    if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-	        return cvText.substring(startIndex, endIndex-endMatcher.group().length());
 	    }
 
 	    return ""; // If the section is not found, return an empty string or handle it as needed
@@ -95,28 +75,28 @@ public class ExtractUtils {
 
     	Map<String, Integer> sectionsMap = new HashMap<String, Integer>();
 		if (experienceMatcher.find()) {
-			sectionsMap.put("Experience", Integer.valueOf(experienceMatcher.end()));
+			sectionsMap.put(RegEx.EXPERIENCE.name(), Integer.valueOf(experienceMatcher.end()));
 			}
 		if (educationMatcher.find()) {
-			sectionsMap.put("Education", Integer.valueOf(educationMatcher.end()));
+			sectionsMap.put(RegEx.EDUCATION.name(), Integer.valueOf(educationMatcher.end()));
 			}
 		if (hobbiesMatcher.find()) {
-			sectionsMap.put("Hobbies", Integer.valueOf(hobbiesMatcher.end()));
+			sectionsMap.put(RegEx.INTERESTS.name(), Integer.valueOf(hobbiesMatcher.end()));
 		}
 		if (skillsMatcher.find()) {
-			sectionsMap.put("Skills", Integer.valueOf(skillsMatcher.end()));
+			sectionsMap.put(RegEx.SKILLS.name(), Integer.valueOf(skillsMatcher.end()));
 			}
 		if (languagesMatcher.find()) {
-			sectionsMap.put("Languages", Integer.valueOf(languagesMatcher.end()));
+			sectionsMap.put(RegEx.LANGUAGES.name(), Integer.valueOf(languagesMatcher.end()));
 		}
 		if (personalProjectsMatcher.find()) {
-			sectionsMap.put("PersonalProjects", Integer.valueOf(personalProjectsMatcher.end()));
+			sectionsMap.put(RegEx.PERSONALPROJECTS.name(), Integer.valueOf(personalProjectsMatcher.end()));
 		}
 		if (certificationsMatcher.find()) {
-			sectionsMap.put("Certifications", Integer.valueOf(certificationsMatcher.end()));
+			sectionsMap.put(RegEx.CERTIFICATIONS.name(), Integer.valueOf(certificationsMatcher.end()));
 		}
 		if (scoresMatcher.find()) {
-			sectionsMap.put("Scores", Integer.valueOf(scoresMatcher.end()));
+			sectionsMap.put(RegEx.SCORES.name(), Integer.valueOf(scoresMatcher.end()));
 		}
 		 Map<String, Integer> sortedMap =  sectionsMap.entrySet()
 	                .stream()
@@ -128,22 +108,19 @@ public class ExtractUtils {
 	                );
     	return sortedMap;
     }
-    public static Pattern getnextPattern(String currentKey, Map<String, Integer> sectionsMap ) {
-        Map<String, Pattern> sectionsPattern= new HashMap<>();
-        sectionsPattern.put("Education", educationPattern);
-        sectionsPattern.put("Experience", experiencePattern);
-        sectionsPattern.put("Hobbies", hobbiesPattern);
-        sectionsPattern.put("Languages", languagesPattern);
-        sectionsPattern.put("Skills", skillsPattern);
-        sectionsPattern.put("Scores", scoresPattern);
-        sectionsPattern.put("PersonalProjects", personalProjectsPattern);
-        sectionsPattern.put("Certifications", certificationsPattern);
-
+    private static Section getnextSection( Map<String, Integer> sectionsMap, String currentKey ) {
 
     	boolean foundCurrentKey = false;
          for (Map.Entry<String, Integer> entry : sectionsMap.entrySet()) {
-             if (foundCurrentKey) 
-                 return sectionsPattern.get(entry.getKey());
+             if (foundCurrentKey)
+             {
+             	Section nextSection = new Section();
+
+            	 nextSection.setName(entry.getKey());
+                 nextSection.setIndex(entry.getValue());
+                     return nextSection;
+             }
+            	
              
              if (entry.getKey().equals(currentKey)) 
                  foundCurrentKey = true;
@@ -151,4 +128,5 @@ public class ExtractUtils {
          }
     	return null;
     }
+   
 }

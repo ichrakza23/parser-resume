@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+import com.parser.enums.RegEx;
 import com.parser.utils.ExtractUtils;
 
 import gate.Corpus;
@@ -90,19 +91,17 @@ public class ResumeParserProgram {
 		/**************************************/
 		String cvText = resume.getContent().toString();// load the CV text here
 
-		profileJSON.put("name", ExtractUtils.extractName(cvText));
-		profileJSON.put("phone", ExtractUtils.extractPhone(cvText));
-		profileJSON.put("email", ExtractUtils.extractEmail(cvText));
-		profileJSON.put("address", ExtractUtils.extractAddress(cvText));
-//		profileJSON.put("experience", ExtractUtils.extractSection(cvText,ExtractUtils.experiencePattern,ExtractUtils.hobbiesPattern));
-		Map<String, Integer> orderedSections = ExtractUtils.getOrderedSectionsByIndex(cvText);
-		profileJSON.put("experience", ExtractUtils.extractSection(cvText,ExtractUtils.experiencePattern,ExtractUtils.getnextPattern("Experience", orderedSections)));
-		profileJSON.put("education", ExtractUtils.extractSection(cvText,ExtractUtils.educationPattern,ExtractUtils.getnextPattern("Education", orderedSections)));
-		profileJSON.put("languages", ExtractUtils.extractSection(cvText,ExtractUtils.languagesPattern,ExtractUtils.getnextPattern("Languages", orderedSections)));
-		profileJSON.put("hobbies", ExtractUtils.extractSection(cvText,ExtractUtils.hobbiesPattern,ExtractUtils.getnextPattern("Hobbies", orderedSections)));
-		profileJSON.put("personalProjects", ExtractUtils.extractSection(cvText,ExtractUtils.personalProjectsPattern,ExtractUtils.getnextPattern("PersonalProjects", orderedSections)));
-		profileJSON.put("certifications", ExtractUtils.extractSection(cvText,ExtractUtils.certificationsPattern,ExtractUtils.getnextPattern("Certifications", orderedSections)));
-		profileJSON.put("scores", ExtractUtils.extractSection(cvText,ExtractUtils.scoresPattern,ExtractUtils.getnextPattern("Scores", orderedSections)));
+		profileJSON.put("name", ExtractUtils.extractInfo(cvText, ExtractUtils.namePattern));
+		profileJSON.put("phone", ExtractUtils.extractInfo(cvText, ExtractUtils.phonePattern));
+		profileJSON.put("email", ExtractUtils.extractInfo(cvText, ExtractUtils.emailPattern));
+		profileJSON.put("address", ExtractUtils.extractInfo(cvText,ExtractUtils.addressPattern));
+		profileJSON.put("experience", ExtractUtils.extractSection(cvText,RegEx.EXPERIENCE.name()));
+		profileJSON.put("education", ExtractUtils.extractSection(cvText,RegEx.EDUCATION.name()));
+		profileJSON.put("languages", ExtractUtils.extractSection(cvText,RegEx.LANGUAGES.name()));
+		profileJSON.put("hobbies", ExtractUtils.extractSection(cvText,RegEx.INTERESTS.name()));
+		profileJSON.put("personalProjects", ExtractUtils.extractSection(cvText,RegEx.PERSONALPROJECTS.name()));
+		profileJSON.put("certifications", ExtractUtils.extractSection(cvText,RegEx.CERTIFICATIONS.name()));
+		profileJSON.put("scores", ExtractUtils.extractSection(cvText,RegEx.SCORES.name()));
 		
 				/*************************************/
 //				Iterator iter = corpus.iterator();
