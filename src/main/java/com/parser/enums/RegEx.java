@@ -18,8 +18,11 @@ public enum RegEx {
     SCORES("\\b(TEST SCORE(S?)|SCORE(S?)|Scores(s?)|Test score(s?)|Test Score(s?))\\b"),
     MEMBERSHIP("\\b(Membership(s?)|MEMBERSHIP(S?))\\b"),
     ADDITIONAL("\\b(Award(s?)|AWARD(S)|Honor(s?)|HONOR(S?)|Accomplishment(s?)|ACCOMPLISHMENT(S?))\\b"),
-    DATEFROMTO("([A-Za-zÀ-ÿ,]+(\\s?))?([0-9]{4})(\\s?)[-](\\s?)\\b((P|p)resent|(C|c)urrent)\\b|([A-Za-zÀ-ÿ,]+(\\s?))?([0-9]{4})"),
-	ONLINE("\\b(Online|ONLINE)\\b");
+    DATEFROMTO("([A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{4})(\\s)*-(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
+    DATEFROMT1("([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{0,4})(\\s)*-(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
+    DATEFORMAT2("(\\d{2}/\\d{2})?(\\s)*-(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|(\\d{2}/\\d{2}))"),
+    DATEFORMAT3("[0-9]{4}(\\s)*-(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([0-9]{4}))"),
+    ONLINE("\\b(Online|ONLINE)\\b");
 	/**
      * Note:
      * - if you have a combination of words make sure you put them in the beginning of the list
