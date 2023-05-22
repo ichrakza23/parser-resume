@@ -23,6 +23,11 @@ public class ExtractUtils {
 	public static Pattern certificationsPattern = Pattern.compile(RegEx.CERTIFICATIONS.toString());
 	public static Pattern scoresPattern = Pattern.compile(RegEx.SCORES.toString());
 	public static Pattern datePattern = Pattern.compile(RegEx.DATEFROMTO.toString());
+	public static Pattern activitiesPattern = Pattern.compile(RegEx.ACTIVITIES.toString());
+	public static Pattern objectivePattern = Pattern.compile(RegEx.OBJECTIVE.toString());
+	public static Pattern membershipPattern = Pattern.compile(RegEx.MEMBERSHIP.toString());
+	public static Pattern onlinePattern = Pattern.compile(RegEx.ONLINE.toString());
+	public static Pattern additionalPattern = Pattern.compile(RegEx.ADDITIONAL.toString());
 
 	public static String extractInfo(String content, Pattern pattern) {
 		Matcher patternMatcher = pattern.matcher(content);
@@ -65,9 +70,14 @@ public class ExtractUtils {
     	Matcher skillsMatcher = skillsPattern.matcher(cvText);
     	Matcher languagesMatcher = languagesPattern.matcher(cvText);
     	Matcher personalProjectsMatcher = personalProjectsPattern.matcher(cvText);
+    	Matcher activitiesMatcher = activitiesPattern.matcher(cvText);
 
     	Matcher certificationsMatcher = certificationsPattern.matcher(cvText);
     	Matcher scoresMatcher = scoresPattern.matcher(cvText);
+    	Matcher objectiveMatcher = objectivePattern.matcher(cvText);
+    	Matcher additionalMatcher = additionalPattern.matcher(cvText);
+    	Matcher onlineMatcher = onlinePattern.matcher(cvText);
+    	Matcher membershipMatcher = membershipPattern.matcher(cvText);
 
 
     	Map<String, Integer> sectionsMap = new HashMap<String, Integer>();
@@ -94,6 +104,21 @@ public class ExtractUtils {
 		}
 		if (scoresMatcher.find()) {
 			sectionsMap.put(RegEx.SCORES.name(), Integer.valueOf(scoresMatcher.end()));
+		}
+		if (activitiesMatcher.find()) {
+			sectionsMap.put(RegEx.ACTIVITIES.name(), Integer.valueOf(activitiesMatcher.end()));
+		}
+		if (objectiveMatcher.find()) {
+			sectionsMap.put(RegEx.OBJECTIVE.name(), Integer.valueOf(objectiveMatcher.end()));
+		}
+		if (additionalMatcher.find()) {
+			sectionsMap.put(RegEx.ADDITIONAL.name(), Integer.valueOf(additionalMatcher.end()));
+		}
+		if (onlineMatcher.find()) {
+			sectionsMap.put(RegEx.ONLINE.name(), Integer.valueOf(onlineMatcher.end()));
+		}
+		if (membershipMatcher.find()) {
+			sectionsMap.put(RegEx.MEMBERSHIP.name(), Integer.valueOf(membershipMatcher.end()));
 		}
 		 Map<String, Integer> sortedMap =  sectionsMap.entrySet()
 	                .stream()

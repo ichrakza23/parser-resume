@@ -10,7 +10,7 @@ public enum RegEx {
     EXPERIENCE("\\b(Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY|Employment)\\b"),
     SKILLS("\\b(Skill(s?) & Expertise(s?)|Tool(s?) & Technolog(y?|ies?)|Skill(s?)|SKILL(S?)|Technical Skills|TECHNICAL SKILLS|Computer Skill(s?)|COMPETENCE(S?)|COMPÉTENCE(S?)|Skills & Expertise|Expertise|AREAS OF EXPERTISE|COMPUTER SKILLS)\\b"),
     INTERESTS("\\b(CENTRESD’INTÉRÊTS|INTEREST(S?)|Interest(s?)|Centre d'intérêt(s?)|CENTRE D'INTÉRÊT(S?))\\b"),
-    ACTIVITIES("\\b(Activity|Activities|ACTIVITY|ACTIVITIES|Activité(?s)|ACTIVITÉ(?S)|Activities and Societies|ACTIVITIES AND SOCIETIES)\\b"),
+    ACTIVITIES("\\b(Activity|Activities|ACTIVITY|ACTIVITIES|Activité(s?)|ACTIVITÉ(S?)|Activities and Societies|ACTIVITIES AND SOCIETIES)\\b"),
     OBJECTIVE("\\b(Objective(s?)|OBJECTIVE(S?)|Summary|SUMMARY|Statement)([^-!@#$%^&*()+.,?])\\b"), // summary included here
     LANGUAGES("\\b(LANGUE(S?)|Langue(s?)|Language(s?)|LANGUAGE(S?))\\b"),
     PERSONALPROJECTS("\\b(PROJECT(S?)|Project(s?)|PERSONAL PROJECTS|Personal Projects)\\b"),
@@ -19,7 +19,7 @@ public enum RegEx {
     MEMBERSHIP("\\b(Membership(s?)|MEMBERSHIP(S?))\\b"),
     ADDITIONAL("\\b(Award(s?)|AWARD(S)|Honor(s?)|HONOR(S?)|Accomplishment(s?)|ACCOMPLISHMENT(S?))\\b"),
     DATEFROMTO("([A-Za-zÀ-ÿ,]+(\\s?))?([0-9]{4})(\\s?)[-](\\s?)\\b((P|p)resent|(C|c)urrent)\\b|([A-Za-zÀ-ÿ,]+(\\s?))?([0-9]{4})"),
-	Online("\\b(Online|ONLINE)\\b");
+	ONLINE("\\b(Online|ONLINE)\\b");
 	/**
      * Note:
      * - if you have a combination of words make sure you put them in the beginning of the list
