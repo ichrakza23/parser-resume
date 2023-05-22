@@ -7,10 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.parser.enums.RegEx;
-import com.parser.models.Experience;
 import com.parser.models.Section;
-
-import jakarta.validation.constraints.AssertFalse.List;
 
 public class ExtractUtils {
 	public static Pattern emailPattern = Pattern.compile(RegEx.EMAIL.toString());
