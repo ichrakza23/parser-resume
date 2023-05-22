@@ -1,5 +1,6 @@
 package com.parser.utils;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,6 +10,11 @@ import java.util.regex.Pattern;
 import com.parser.enums.RegEx;
 import com.parser.models.Section;
 
+/**
+ * 
+ * @author izarati
+ *
+ */
 public class ExtractUtils {
 	public static Pattern emailPattern = Pattern.compile(RegEx.EMAIL.toString());
 	public static Pattern phonePattern = Pattern.compile(RegEx.PHONE.toString());
@@ -29,6 +35,13 @@ public class ExtractUtils {
 	public static Pattern onlinePattern = Pattern.compile(RegEx.ONLINE.toString());
 	public static Pattern additionalPattern = Pattern.compile(RegEx.ADDITIONAL.toString());
 
+	/**
+	 * 
+	 * 
+	 * @param content
+	 * @param pattern
+	 * @return an information based on pattern. For exemple: phone number, address, name,...
+	 */
 	public static String extractInfo(String content, Pattern pattern) {
 		Matcher patternMatcher = pattern.matcher(content);
 		 String info="";
@@ -38,9 +51,16 @@ public class ExtractUtils {
 		return info;
 	}
 
+	/**
+	 * 
+	 * @param cvText
+	 * @param section
+	 * @return a section. For exemple:  experience, education, projects,...
+	 */
     public static String extractSection(String cvText, String section ) {
-		Map<String, Integer> orderedSections = getOrderedSectionsByIndex(cvText);
-        Integer startIndex = orderedSections.get(section);
+		Map<String, Section> orderedSections = getOrderedSectionsByIndex(cvText);
+        
+		Integer startIndex = orderedSections.get(section)!=null?orderedSections.get(section).getIndex():-1;
         Section nextSection= new Section();
     	try {
     		nextSection= getnextSection(orderedSections, section );
@@ -49,21 +69,23 @@ public class ExtractUtils {
 			e.printStackTrace();
 		}
     	Integer endIndex=nextSection!=null? nextSection.getIndex():-1;
-        if(startIndex!=null &&startIndex!=-1   &&endIndex==-1 )
+        if(startIndex!=null && startIndex!=-1   && endIndex==-1 )
         	return cvText.substring(startIndex, cvText.length()-1);
 	    if (startIndex!=null && startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-	    	String sectionContent = cvText.substring(startIndex, endIndex);
-	    	int lastInline = sectionContent.lastIndexOf("\n");
-		if(lastInline!=-1) 
-			return sectionContent.substring(0, lastInline);
-		
-		return sectionContent;
+
+	    	return cvText.substring(startIndex, endIndex-nextSection.getLabel().length());
+
 
 	    }
 
 	    return ""; // If the section is not found, return an empty string or handle it as needed
 	}
-    public static  Map<String, Integer>  getOrderedSectionsByIndex(String cvText) {
+    /**
+     * 
+     * @param cvText
+     * @return a map of different available sections ordered by startI index
+     */
+    public static  Map<String, Section>  getOrderedSectionsByIndex(String cvText) {
     	Matcher experienceMatcher = experiencePattern.matcher(cvText);
     	Matcher educationMatcher = educationPattern.matcher(cvText);
     	Matcher hobbiesMatcher = hobbiesPattern.matcher(cvText);
@@ -80,49 +102,49 @@ public class ExtractUtils {
     	Matcher membershipMatcher = membershipPattern.matcher(cvText);
 
 
-    	Map<String, Integer> sectionsMap = new HashMap<String, Integer>();
+    	Map<String, Section> sectionsMap = new HashMap<String, Section>();
 		if (experienceMatcher.find()) {
-			sectionsMap.put(RegEx.EXPERIENCE.name(), Integer.valueOf(experienceMatcher.end()));
+			sectionsMap.put(RegEx.EXPERIENCE.name(), new Section(RegEx.EXPERIENCE.name(),experienceMatcher.group(), Integer.valueOf(experienceMatcher.end())));
 			}
 		if (educationMatcher.find()) {
-			sectionsMap.put(RegEx.EDUCATION.name(), Integer.valueOf(educationMatcher.end()));
+			sectionsMap.put(RegEx.EDUCATION.name(), new Section(RegEx.EDUCATION.name(),educationMatcher.group(), Integer.valueOf(educationMatcher.end())));
 			}
 		if (hobbiesMatcher.find()) {
-			sectionsMap.put(RegEx.INTERESTS.name(), Integer.valueOf(hobbiesMatcher.end()));
+			sectionsMap.put(RegEx.INTERESTS.name(), new Section(RegEx.INTERESTS.name(),hobbiesMatcher.group(), Integer.valueOf(hobbiesMatcher.end())));
 		}
 		if (skillsMatcher.find()) {
-			sectionsMap.put(RegEx.SKILLS.name(), Integer.valueOf(skillsMatcher.end()));
+			sectionsMap.put(RegEx.SKILLS.name(), new Section(RegEx.SKILLS.name(),skillsMatcher.group(), Integer.valueOf(skillsMatcher.end())));
 			}
 		if (languagesMatcher.find()) {
-			sectionsMap.put(RegEx.LANGUAGES.name(), Integer.valueOf(languagesMatcher.end()));
+			sectionsMap.put(RegEx.LANGUAGES.name(), new Section(RegEx.LANGUAGES.name(),languagesMatcher.group(), Integer.valueOf(languagesMatcher.end())));
 		}
 		if (personalProjectsMatcher.find()) {
-			sectionsMap.put(RegEx.PERSONALPROJECTS.name(), Integer.valueOf(personalProjectsMatcher.end()));
+			sectionsMap.put(RegEx.PERSONALPROJECTS.name(), new Section(RegEx.PERSONALPROJECTS.name(),personalProjectsMatcher.group(), Integer.valueOf(personalProjectsMatcher.end())));
 		}
 		if (certificationsMatcher.find()) {
-			sectionsMap.put(RegEx.CERTIFICATIONS.name(), Integer.valueOf(certificationsMatcher.end()));
+			sectionsMap.put(RegEx.CERTIFICATIONS.name(), new Section(RegEx.CERTIFICATIONS.name(),certificationsMatcher.group(), Integer.valueOf(certificationsMatcher.end())));
 		}
 		if (scoresMatcher.find()) {
-			sectionsMap.put(RegEx.SCORES.name(), Integer.valueOf(scoresMatcher.end()));
+			sectionsMap.put(RegEx.SCORES.name(), new Section(RegEx.SCORES.name(),scoresMatcher.group(), Integer.valueOf(scoresMatcher.end())));
 		}
 		if (activitiesMatcher.find()) {
-			sectionsMap.put(RegEx.ACTIVITIES.name(), Integer.valueOf(activitiesMatcher.end()));
+			sectionsMap.put(RegEx.ACTIVITIES.name(), new Section(RegEx.ACTIVITIES.name(),activitiesMatcher.group(), Integer.valueOf(activitiesMatcher.end())));
 		}
 		if (objectiveMatcher.find()) {
-			sectionsMap.put(RegEx.OBJECTIVE.name(), Integer.valueOf(objectiveMatcher.end()));
+			sectionsMap.put(RegEx.OBJECTIVE.name(), new Section(RegEx.OBJECTIVE.name(),objectiveMatcher.group(), Integer.valueOf(objectiveMatcher.end())));
 		}
 		if (additionalMatcher.find()) {
-			sectionsMap.put(RegEx.ADDITIONAL.name(), Integer.valueOf(additionalMatcher.end()));
+			sectionsMap.put(RegEx.ADDITIONAL.name(), new Section(RegEx.ADDITIONAL.name(),additionalMatcher.group(), Integer.valueOf(additionalMatcher.end())));
 		}
 		if (onlineMatcher.find()) {
-			sectionsMap.put(RegEx.ONLINE.name(), Integer.valueOf(onlineMatcher.end()));
+			sectionsMap.put(RegEx.ONLINE.name(), new Section(RegEx.ONLINE.name(),onlineMatcher.group(), Integer.valueOf(onlineMatcher.end())));
 		}
 		if (membershipMatcher.find()) {
-			sectionsMap.put(RegEx.MEMBERSHIP.name(), Integer.valueOf(membershipMatcher.end()));
+			sectionsMap.put(RegEx.MEMBERSHIP.name(), new Section(RegEx.MEMBERSHIP.name(),membershipMatcher.group(), Integer.valueOf(membershipMatcher.end())));
 		}
-		 Map<String, Integer> sortedMap =  sectionsMap.entrySet()
+		 Map<String, Section> sortedMap =  sectionsMap.entrySet()
 	                .stream()
-	                .sorted(Map.Entry.comparingByValue())
+	                .sorted(Map.Entry.comparingByValue(Comparator.comparingInt(e -> e.getIndex())))
 	                .collect(
 	                        LinkedHashMap::new,
 	                        (map, entry) -> map.put(entry.getKey(), entry.getValue()),
@@ -130,18 +152,19 @@ public class ExtractUtils {
 	                );
     	return sortedMap;
     }
-    private static Section getnextSection( Map<String, Integer> sectionsMap, String currentKey ) {
+    /**
+     * 
+     * @param sectionsMap
+     * @param currentKey
+     * @return the next section in order to know where the actual section finish
+     */
+    private static Section getnextSection( Map<String, Section> sectionsMap, String currentKey ) {
 
     	boolean foundCurrentKey = false;
-         for (Map.Entry<String, Integer> entry : sectionsMap.entrySet()) {
+         for (Map.Entry<String, Section> entry : sectionsMap.entrySet()) {
              if (foundCurrentKey)
-             {
-             	Section nextSection = new Section();
-
-            	 nextSection.setName(entry.getKey());
-                 nextSection.setIndex(entry.getValue());
-                     return nextSection;
-             }
+                     return entry.getValue();
+            
             	
              
              if (entry.getKey().equals(currentKey)) 

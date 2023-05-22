@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.exception.TikaException;
@@ -77,8 +75,8 @@ public class ResumeParserProgram {
 		URL u = file.toURI().toURL();
 		FeatureMap params = Factory.newFeatureMap();
 		params.put("sourceUrl", u);
-		params.put("preserveOriginalContent", new Boolean(true));
-		params.put("collectRepositioningInfo", new Boolean(true));
+		params.put("preserveOriginalContent", true);
+		params.put("collectRepositioningInfo", true);
 		Out.prln("Creating doc for " + u);
 		Document resume = (Document) Factory.createResource("gate.corpora.DocumentImpl", params);
 		corpus.add(resume);

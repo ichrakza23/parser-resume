@@ -1,4 +1,4 @@
-package com.parser;
+package com.parser.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
-import com.parser.service.ParserService;
+import com.parser.ResumeParserProgram;
 import com.parser.wrapper.ResponseWrapper;
 
 import gate.util.GateException;
 
 
-
+/**
+ * 
+ * @author izarati
+ *
+ */
 
 @Service
 public class ParserServiceImpl implements ParserService {

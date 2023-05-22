@@ -1,20 +1,20 @@
 package com.parser;
 
 
-import java.io.*;
+import java.io.IOException;
 
-import gate.*;
+import gate.Corpus;
+import gate.CorpusController;
+import gate.Factory;
+import gate.Gate;
 import gate.creole.SerialAnalyserController;
-import gate.util.*;
-import gate.util.persistence.PersistenceManager;
+import gate.util.GateException;
 
 public class Annie {
 
 	private CorpusController annieController;
 
 	public void initAnnie() throws GateException, IOException {
-//		File gateHome = Gate.getGateHome();
-//		File annieGapp = new File(gateHome, "ANNIEResumeParser.gapp");
 		// initialise the GATE library
 		 
 	annieController = (SerialAnalyserController) Factory.createResource("gate.creole.SerialAnalyserController",

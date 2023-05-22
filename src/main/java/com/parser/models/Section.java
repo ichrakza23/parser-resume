@@ -1,23 +1,15 @@
 package com.parser.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Section {
  private String name;
+ private String label;
  private Integer index;
-// public Integer getIndex() {
-//	 return index;
-// }
-// public String getName() {
-//	 return name;
-// }
-// public void setIndex(Integer index) {
-//	 this.index=index;
-// }
-// public void setName(String name) {
-//	 this.name=name;
-// }
+
 }
