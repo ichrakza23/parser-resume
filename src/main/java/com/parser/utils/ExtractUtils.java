@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.parser.enums.RegEx;
+import com.parser.models.Experience;
 import com.parser.models.Section;
 
 /**
@@ -171,6 +172,17 @@ public class ExtractUtils {
                  foundCurrentKey = true;
              
          }
+    	return null;
+    }
+    public static java.util.List<Experience> setExperiences(String experience) {
+    	Matcher patternMatcher = datePattern.matcher(experience);
+		 String info="";
+
+		while (patternMatcher.find()) {
+			patternMatcher.group();
+			   System.out.println(patternMatcher.group());
+
+			}
     	return null;
     }
    

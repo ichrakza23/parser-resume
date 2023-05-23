@@ -6,10 +6,10 @@ public enum RegEx {
 	LINK("(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)"),
     EMAIL("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"),
     PHONE("(\\+\\s?\\d{1,3})?\\s*\\(?\\d{1,4}\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{2,9}"),
-    EDUCATION("\\b(Education(s?)|EDUCATION(S?)|ACADEMIC QUALIFICATION(S?)|Diploma(s?)|DIPLOMA(S?))\\b"),
-    EXPERIENCE("\\b(Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY|Employment)\\b"),
+    EDUCATION("\\b((E|É)ducation(s?)|(E|É)DUCATION(S?)|ACADEMIC QUALIFICATION(S?)|Diploma(s?)|DIPLOMA(S?))\\b"),
+    EXPERIENCE("\\b(Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY|Employment|EXPÉRIENCES P R O F E S S I O N N E L L E S)\\b"),
     SKILLS("\\b(Skill(s?) & Expertise(s?)|Tool(s?) & Technolog(y?|ies?)|Skill(s?)|SKILL(S?)|Technical Skills|TECHNICAL SKILLS|Computer Skill(s?)|COMPETENCE(S?)|COMPÉTENCE(S?)|Skills & Expertise|Expertise|AREAS OF EXPERTISE|COMPUTER SKILLS)\\b"),
-    INTERESTS("\\b(CENTRESD’INTÉRÊTS|INTEREST(S?)|Interest(s?)|Centre d'intérêt(s?)|CENTRE D'INTÉRÊT(S?))\\b"),
+    INTERESTS("\\b(CENTRESD’INTÉRÊTS|INTEREST(S?)|Interest(s?)|Centre d'intérêt(s?)|CENTRE D'INTÉRÊT(S?)|INTÉRÊT(S?) ET LOISIR(S?)|Intérêt(s?) et loisir(s?))\\b"),
     ACTIVITIES("\\b(Activity|Activities|ACTIVITY|ACTIVITIES|Activité(s?)|ACTIVITÉ(S?)|Activities and Societies|ACTIVITIES AND SOCIETIES)\\b"),
     OBJECTIVE("\\b(Objective(s?)|OBJECTIVE(S?)|Summary|SUMMARY|Statement)([^-!@#$%^&*()+.,?])\\b"), // summary included here
     LANGUAGES("\\b(LANGUE(S?)|Langue(s?)|Language(s?)|LANGUAGE(S?))\\b"),
