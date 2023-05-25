@@ -1,7 +1,5 @@
 package com.parser.models;
 
-import java.time.LocalDate;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,8 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Experience {
 private String title;
-private String company;
-private LocalDate startDate;
-private LocalDate endDate;
+private String description;
+//private String company;
+private String period;
+//private LocalDate startDate;
+//private LocalDate endDate;
 
 }
