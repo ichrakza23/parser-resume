@@ -1,21 +1,27 @@
 package com.parser.utils;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.parser.enums.RegEx;
 import com.parser.models.Experience;
+import com.parser.models.Index;
 import com.parser.models.Section;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * @author izarati
  *
  */
+@Slf4j
 public class ExtractUtils {
 	public static Pattern emailPattern = Pattern.compile(RegEx.EMAIL.toString());
 	public static Pattern phonePattern = Pattern.compile(RegEx.PHONE.toString());
@@ -176,14 +182,51 @@ public class ExtractUtils {
     }
     public static java.util.List<Experience> setExperiences(String experience) {
     	Matcher patternMatcher = datePattern.matcher(experience);
-		 String info="";
-
+		 Index currentIndex ;
+		 java.util.List<Experience> experiences = new ArrayList();
+		 Map<Integer, Index> indexes = new HashMap<>();
+		 int i=0;
 		while (patternMatcher.find()) {
 			patternMatcher.group();
-			   System.out.println(patternMatcher.group());
+			currentIndex = new Index(patternMatcher.start(), patternMatcher.end());
+			indexes.put(i, currentIndex);
+			i++;
+			//			Experience exp = new Experience() ;
+//			exp.setTitle(experience.substring(0,patternMatcher.start() ));
+//			exp.setDescription(info);
+			ExtractUtils.log.info(patternMatcher.group());
 
 			}
-    	return null;
+		Integer startExp =0;
+		 for (Map.Entry<Integer, Index> entry : indexes.entrySet()) {
+			 
+			 Experience exp = new Experience() ;
+			 Integer startNextIndex= indexes.get(entry.getKey()+1)!=null?indexes.get(entry.getKey()+1).getStartIndex():null;
+			   exp.setTitle(experience.substring(startExp,experience.indexOf("\r\n", entry.getValue().getEndIndex() )));
+
+			
+				exp.setPeriod(experience.substring(entry.getValue().getStartIndex(),entry.getValue().getEndIndex() ));
+				if(startNextIndex!=null) {
+					if (experience.lastIndexOf(".\r\n",startNextIndex)!=-1) {
+						exp.setDescription(experience.substring(experience.indexOf("\r\n", entry.getValue().getEndIndex() )+1,experience.lastIndexOf(".\r\n",startNextIndex)) );
+						startExp=experience.lastIndexOf(".\r\n",startNextIndex);
+
+	
+					} else {
+						exp.setDescription(experience.substring(experience.indexOf("\r\n", entry.getValue().getEndIndex() )+1,experience.lastIndexOf("\r\n",startNextIndex)) );
+						startExp=experience.lastIndexOf("\r\n",startNextIndex);
+
+
+					}
+
+				} else {
+					exp.setDescription(experience.substring(experience.indexOf("\r\n", entry.getValue().getEndIndex() )+1,experience.length()) );
+				}
+          experiences.add(exp);
+             
+         }
+		
+    	return experiences;
     }
    
 }

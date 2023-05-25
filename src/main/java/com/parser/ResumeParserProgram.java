@@ -71,14 +71,14 @@ public class ResumeParserProgram {
 		profileJSON.put("phone", ExtractUtils.extractInfo(cvText, ExtractUtils.phonePattern));
 		profileJSON.put("email", ExtractUtils.extractInfo(cvText, ExtractUtils.emailPattern));
 		profileJSON.put("address", ExtractUtils.extractInfo(cvText,ExtractUtils.addressPattern));
-		profileJSON.put("experience",experience );
+//		profileJSON.put("experience",experience );
 		profileJSON.put("education", ExtractUtils.extractSection(cvText,RegEx.EDUCATION.name()));
 		profileJSON.put("languages", ExtractUtils.extractSection(cvText,RegEx.LANGUAGES.name()));
 		profileJSON.put("hobbies", ExtractUtils.extractSection(cvText,RegEx.INTERESTS.name()));
 		profileJSON.put("personalProjects", ExtractUtils.extractSection(cvText,RegEx.PERSONALPROJECTS.name()));
 		profileJSON.put("certifications", ExtractUtils.extractSection(cvText,RegEx.CERTIFICATIONS.name()));
 		profileJSON.put("scores", ExtractUtils.extractSection(cvText,RegEx.SCORES.name()));
-		ExtractUtils.setExperiences(experience);
+		profileJSON.put("experiences",ExtractUtils.setExperiences(experience));
 
 		if (!profileJSON.isEmpty()) {
 			parsedJSON.put("basics", profileJSON);
