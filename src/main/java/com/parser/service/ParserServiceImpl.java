@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.tika.exception.TikaException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,15 +65,11 @@ public class ParserServiceImpl implements ParserService {
 
 			}
 			PDDocument document;
-		    PDFTextStripper stripper;
-		    String text;
 		    if(tikkaConvertedFile!=null) {
 		    	try {
 					document = PDDocument.load( filetoExtractData);
-					stripper = new PDFTextStripper();
-					text = stripper.getText(document);
-					parsedJSON = resumeParserProgram.loadData(text);
-
+					String content = resumeParserProgram.removeFooterIfExists(document);
+					parsedJSON = resumeParserProgram.loadData(content);
 				} catch (IOException e) {
 					throw new RuntimeException(e.getMessage());
 				}

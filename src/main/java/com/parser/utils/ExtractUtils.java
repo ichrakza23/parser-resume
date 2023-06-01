@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +40,13 @@ public class ExtractUtils {
 	public static Pattern membershipPattern = Pattern.compile(RegEx.MEMBERSHIP.toString());
 	public static Pattern onlinePattern = Pattern.compile(RegEx.ONLINE.toString());
 	public static Pattern additionalPattern = Pattern.compile(RegEx.ADDITIONAL.toString());
+	public static Pattern redundantPattern = Pattern.compile(RegEx.REDUNDANT_TEXT.toString());
+	public static Pattern interventionPattern = Pattern.compile(RegEx.INTERVENTION.toString());
 
+	public static String cleanRedundantInfo(String content) {
+        return content.replaceAll(RegEx.REDUNDANT_TEXT.toString(), "$1");
+
+	}
 	/**
 	 * 
 	 * 
@@ -107,6 +112,7 @@ public class ExtractUtils {
     	Matcher additionalMatcher = additionalPattern.matcher(cvText);
     	Matcher onlineMatcher = onlinePattern.matcher(cvText);
     	Matcher membershipMatcher = membershipPattern.matcher(cvText);
+    	Matcher interventionMatcher = interventionPattern.matcher(cvText);
 
 
     	Map<String, Section> sectionsMap = new HashMap<String, Section>();
@@ -149,6 +155,9 @@ public class ExtractUtils {
 		if (membershipMatcher.find()) {
 			sectionsMap.put(RegEx.MEMBERSHIP.name(), new Section(RegEx.MEMBERSHIP.name(),membershipMatcher.group(), Integer.valueOf(membershipMatcher.end())));
 		}
+		if (interventionMatcher.find()) {
+			sectionsMap.put(RegEx.INTERVENTION.name(), new Section(RegEx.INTERVENTION.name(),interventionMatcher.group(), Integer.valueOf(interventionMatcher.end())));
+		}
 		 Map<String, Section> sortedMap =  sectionsMap.entrySet()
 	                .stream()
 	                .sorted(Map.Entry.comparingByValue(Comparator.comparingInt(e -> e.getIndex())))
@@ -183,7 +192,7 @@ public class ExtractUtils {
     public static java.util.List<Experience> setExperiences(String experience) {
     	Matcher patternMatcher = datePattern.matcher(experience);
 		 Index currentIndex ;
-		 java.util.List<Experience> experiences = new ArrayList();
+		 java.util.List<Experience> experiences = new ArrayList<Experience>();
 		 Map<Integer, Index> indexes = new HashMap<>();
 		 int i=0;
 		while (patternMatcher.find()) {
