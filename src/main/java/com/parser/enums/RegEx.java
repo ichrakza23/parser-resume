@@ -10,7 +10,9 @@ public enum RegEx {
 			"\\b(FORMATION(S?)|Formation(s?)|(E|É)ducation(s?)|(E|É)DUCATION(S?)|ACADEMIC QUALIFICATION(S?)|Diploma(s?)|DIPLOMA(S?))\\b"),
 	EXPERIENCE(
 			"\\b(Project(s?)|Projet(s?)|Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY|Employment|EXPÉRIENCES P R O F E S S I O N N E L L E S)\\b"),
-	SKILLS("\\b(Skill(s?) & Expertise(s?)|Tool(s?) & Technolog(y?|ies?)|Skill(s?)|SKILL(S?)|Technical Skills|TECHNICAL SKILLS|Computer Skill(s?)|COMPETENCE(S?)|COMPÉTENCE(S?)|Skills & Expertise|Expertise|AREAS OF EXPERTISE|COMPUTER SKILLS)\\b"),
+	SKILLS("\\b(Skill(s?) & Expertise(s?)|Tool(s?) & Technolog(y?|ies?)|Skill(s?)|SKILL(S?)|Technical Skills|TECHNICAL SKILLS|Computer Skill(s?)|COMPETENCE(S?)|COMPÉTENCE(S?)|Skills & Expertise|Expertise|AREAS OF EXPERTISE|Computer Skills|COMPUTER SKILLS)\\b"),
+	PERSONALSKILLS("\\b(PERSONAL SKILLS|Personal Skills)\\b"),
+	PERSONALSUMMARY("\\b(PERSONAL SUMMARY|Personal(S|s)summary|Summary|Introduction)\\b"),
 	INTERESTS(
 			"\\b(CENTRESD’INTÉRÊTS|INTEREST(S?)|Interest(s?)|Centre d'intérêt(s?)|CENTRE D'INTÉRÊT(S?)|INTÉRÊT(S?) ET LOISIR(S?)|Intérêt(s?) et loisir(s?))\\b"),
 	ACTIVITIES(
@@ -31,6 +33,8 @@ public enum RegEx {
 	DATEFORMAT2("(\\d{2}/\\d{2})?(\\s)*(-|à|to)(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|(\\d{2}/\\d{2}))"),
 	DATEFORMAT3("[0-9]{4}(\\s)*(-|à|to)(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([0-9]{4}))"),
 	ONLINE("\\b(Online|ONLINE)\\b"), REDUNDANT_TEXT("\\b(\\w+\\s\\w+)\\b(.*\\b\\1\\b)+"),
+	QUALITIES("\\b(Qualités|Qualities|QUALITIES|PERSONAL QUALITIES|Personal (Q|q)ualities)\\b"),
+	VOLUNTARYWORK("\\b(VOLUNTARY EXPERIENCE|Voluntary (E|e)xperience|VOLUNTARY WORK|Voluntary (W|w)ork)\\b"),
 	INTERVENTION("\\b(NIVEAUX D’INTERVENTION)\\b");
 
 	/**

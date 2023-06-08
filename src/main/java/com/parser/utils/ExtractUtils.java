@@ -43,6 +43,11 @@ public class ExtractUtils {
 	public static Pattern additionalPattern = Pattern.compile(RegEx.ADDITIONAL.toString());
 	public static Pattern redundantPattern = Pattern.compile(RegEx.REDUNDANT_TEXT.toString());
 	public static Pattern interventionPattern = Pattern.compile(RegEx.INTERVENTION.toString());
+	public static Pattern voluntaryPattern = Pattern.compile(RegEx.VOLUNTARYWORK.toString());
+
+	public static Pattern personalSkillsPattern = Pattern.compile(RegEx.PERSONALSKILLS.toString());
+	public static Pattern personalSummaryPattern = Pattern.compile(RegEx.PERSONALSUMMARY.toString());
+	public static Pattern qualitiesPattern = Pattern.compile(RegEx.QUALITIES.toString());
 
 	public static String cleanRedundantInfo(String content) {
 		return content.replaceAll(RegEx.REDUNDANT_TEXT.toString(), "$1");
@@ -115,69 +120,56 @@ public class ExtractUtils {
 		Matcher onlineMatcher = onlinePattern.matcher(cvText);
 		Matcher membershipMatcher = membershipPattern.matcher(cvText);
 		Matcher interventionMatcher = interventionPattern.matcher(cvText);
+		Map<String, Matcher> matcherMap = new HashMap<String, Matcher>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
+			{
+				put(RegEx.EXPERIENCE.name(), experienceMatcher);
+
+				put(RegEx.EDUCATION.name(), educationMatcher);
+				put(RegEx.INTERESTS.name(), hobbiesMatcher);
+
+				put(RegEx.SKILLS.name(), skillsMatcher);
+				put(RegEx.LANGUAGES.name(), languagesMatcher);
+				put(RegEx.PERSONALPROJECTS.name(), personalProjectsMatcher);
+
+				put(RegEx.CERTIFICATIONS.name(), certificationsMatcher);
+				put(RegEx.SCORES.name(), scoresMatcher);
+				put(RegEx.ACTIVITIES.name(), activitiesMatcher);
+
+				put(RegEx.OBJECTIVE.name(), objectiveMatcher);
+
+				put(RegEx.ADDITIONAL.name(), additionalMatcher);
+				put(RegEx.ONLINE.name(), onlineMatcher);
+				put(RegEx.MEMBERSHIP.name(), membershipMatcher);
+				put(RegEx.INTERVENTION.name(), interventionMatcher);
+				put(RegEx.PERSONALSKILLS.name(), personalSkillsPattern.matcher(cvText));
+				put(RegEx.VOLUNTARYWORK.name(), voluntaryPattern.matcher(cvText));
+				put(RegEx.PERSONALSUMMARY.name(), personalSummaryPattern.matcher(cvText));
+				put(RegEx.QUALITIES.name(), qualitiesPattern.matcher(cvText));
+			}
+		};
 		Map<String, Section> sectionsMap = new HashMap<String, Section>();
-		if (experienceMatcher.find()) {
-			sectionsMap.put(RegEx.EXPERIENCE.name(), new Section(RegEx.EXPERIENCE.name(), experienceMatcher.group(),
-					Integer.valueOf(experienceMatcher.end())));
-		}
-		if (educationMatcher.find()) {
-			sectionsMap.put(RegEx.EDUCATION.name(), new Section(RegEx.EDUCATION.name(), educationMatcher.group(),
-					Integer.valueOf(educationMatcher.end())));
-		}
-		if (hobbiesMatcher.find()) {
-			sectionsMap.put(RegEx.INTERESTS.name(),
-					new Section(RegEx.INTERESTS.name(), hobbiesMatcher.group(), Integer.valueOf(hobbiesMatcher.end())));
-		}
-		if (skillsMatcher.find()) {
-			sectionsMap.put(RegEx.SKILLS.name(),
-					new Section(RegEx.SKILLS.name(), skillsMatcher.group(), Integer.valueOf(skillsMatcher.end())));
-		}
-		if (languagesMatcher.find()) {
-			sectionsMap.put(RegEx.LANGUAGES.name(), new Section(RegEx.LANGUAGES.name(), languagesMatcher.group(),
-					Integer.valueOf(languagesMatcher.end())));
-		}
-		if (personalProjectsMatcher.find()) {
-			sectionsMap.put(RegEx.PERSONALPROJECTS.name(), new Section(RegEx.PERSONALPROJECTS.name(),
-					personalProjectsMatcher.group(), Integer.valueOf(personalProjectsMatcher.end())));
-		}
-		if (certificationsMatcher.find()) {
-			sectionsMap.put(RegEx.CERTIFICATIONS.name(), new Section(RegEx.CERTIFICATIONS.name(),
-					certificationsMatcher.group(), Integer.valueOf(certificationsMatcher.end())));
-		}
-		if (scoresMatcher.find()) {
-			sectionsMap.put(RegEx.SCORES.name(),
-					new Section(RegEx.SCORES.name(), scoresMatcher.group(), Integer.valueOf(scoresMatcher.end())));
-		}
-		if (activitiesMatcher.find()) {
-			sectionsMap.put(RegEx.ACTIVITIES.name(), new Section(RegEx.ACTIVITIES.name(), activitiesMatcher.group(),
-					Integer.valueOf(activitiesMatcher.end())));
-		}
-		if (objectiveMatcher.find()) {
-			sectionsMap.put(RegEx.OBJECTIVE.name(), new Section(RegEx.OBJECTIVE.name(), objectiveMatcher.group(),
-					Integer.valueOf(objectiveMatcher.end())));
-		}
-		if (additionalMatcher.find()) {
-			sectionsMap.put(RegEx.ADDITIONAL.name(), new Section(RegEx.ADDITIONAL.name(), additionalMatcher.group(),
-					Integer.valueOf(additionalMatcher.end())));
-		}
-		if (onlineMatcher.find()) {
-			sectionsMap.put(RegEx.ONLINE.name(),
-					new Section(RegEx.ONLINE.name(), onlineMatcher.group(), Integer.valueOf(onlineMatcher.end())));
-		}
-		if (membershipMatcher.find()) {
-			sectionsMap.put(RegEx.MEMBERSHIP.name(), new Section(RegEx.MEMBERSHIP.name(), membershipMatcher.group(),
-					Integer.valueOf(membershipMatcher.end())));
-		}
-		if (interventionMatcher.find()) {
-			sectionsMap.put(RegEx.INTERVENTION.name(), new Section(RegEx.INTERVENTION.name(),
-					interventionMatcher.group(), Integer.valueOf(interventionMatcher.end())));
-		}
+
+		matcherMap.entrySet().stream().forEach(entry -> {
+			putIntoSectionsMapIfMatches(sectionsMap, entry.getValue(), entry.getKey());
+		});
 		Map<String, Section> sortedMap = sectionsMap.entrySet().stream()
 				.sorted(Map.Entry.comparingByValue(Comparator.comparingInt(e -> e.getIndex())))
 				.collect(LinkedHashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()),
 						LinkedHashMap::putAll);
 		return sortedMap;
+	}
+
+	private static Map<String, Section> putIntoSectionsMapIfMatches(Map<String, Section> sectionsMap, Matcher matcher,
+			String name) {
+		if (matcher.find()) {
+			sectionsMap.put(name, new Section(name, matcher.group(), Integer.valueOf(matcher.end())));
+		}
+		return sectionsMap;
 	}
 
 	/**
