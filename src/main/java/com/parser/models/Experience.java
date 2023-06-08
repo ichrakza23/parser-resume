@@ -6,11 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Experience {
-private String title;
-private String description;
-//private String company;
-private String period;
-//private LocalDate startDate;
-//private LocalDate endDate;
+	private String title;
+	private String description;
+	private String period;
 
 }

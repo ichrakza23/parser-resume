@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Index {
-private Integer startIndex;
-private Integer endIndex;
+	private Integer startIndex;
+	private Integer endIndex;
 
 }

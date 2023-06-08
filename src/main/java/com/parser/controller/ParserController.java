@@ -1,6 +1,5 @@
 package com.parser.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +16,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-
-
 @RestController
 @RequestMapping("/api/parser")
 public class ParserController {
@@ -27,16 +24,12 @@ public class ParserController {
 	private ParserService parserService;
 
 	@Operation(summary = "parser file")
-	@ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully parsed a file"),
-            @ApiResponse(responseCode = "401", description = "You are not authorized to view the resource"),
-            @ApiResponse(responseCode = "403", description = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found"),
-            @ApiResponse(responseCode = "500", description = "file parsing failure")
-    })
-	@PostMapping(value="/upload", consumes = {
-		      "multipart/form-data"
-	   })
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully parsed a file"),
+			@ApiResponse(responseCode = "401", description = "You are not authorized to view the resource"),
+			@ApiResponse(responseCode = "403", description = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found"),
+			@ApiResponse(responseCode = "500", description = "file parsing failure") })
+	@PostMapping(value = "/upload", consumes = { "multipart/form-data" })
 	public ResponseWrapper parseResume(@RequestParam MultipartFile resume) {
 		ResponseWrapper responseWrapper = null;
 		try {

@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.tika.exception.TikaException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
 import com.parser.ResumeParserProgram;
+import com.parser.utils.DocumentToHtmlConverter;
 import com.parser.wrapper.ResponseWrapper;
-
 
 /**
  * 
@@ -31,7 +30,7 @@ public class ParserServiceImpl implements ParserService {
 	private ResumeParserProgram resumeParserProgram;
 
 	@Override
-	public ResponseWrapper parseResume(MultipartFile file)  {
+	public ResponseWrapper parseResume(MultipartFile file) {
 
 		String uploadedFolder = System.getProperty("user.dir");
 		if (uploadedFolder != null && !uploadedFolder.isEmpty()) {
@@ -56,29 +55,29 @@ public class ParserServiceImpl implements ParserService {
 
 		}
 		JSONObject parsedJSON = null;
-			File filetoExtractData= new File(path.toAbsolutePath().toString());
-			File tikkaConvertedFile = null;
-			try {
-				tikkaConvertedFile = resumeParserProgram.parseToHTMLUsingApacheTikka(path.toAbsolutePath().toString());
-			} catch (IOException | SAXException | TikaException exception) {
-				throw new RuntimeException(exception.getMessage());
+		File filetoExtractData = new File(path.toAbsolutePath().toString());
+		File tikkaConvertedFile = null;
+		try {
+			tikkaConvertedFile = DocumentToHtmlConverter.parseToHTMLUsingApacheTikka(path.toAbsolutePath().toString());
+		} catch (SAXException exception) {
+			throw new RuntimeException(exception.getMessage());
 
+		}
+		PDDocument document;
+		if (tikkaConvertedFile != null) {
+			try {
+				document = PDDocument.load(filetoExtractData);
+				String content = resumeParserProgram.removeFooterIfExists(document);
+				parsedJSON = resumeParserProgram.loadData(content);
+			} catch (IOException e) {
+				throw new RuntimeException(e.getMessage());
 			}
-			PDDocument document;
-		    if(tikkaConvertedFile!=null) {
-		    	try {
-					document = PDDocument.load( filetoExtractData);
-					String content = resumeParserProgram.removeFooterIfExists(document);
-					parsedJSON = resumeParserProgram.loadData(content);
-				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage());
-				}
-		    	responseWrapper = new ResponseWrapper();
-				responseWrapper.setStatus(200);
-				responseWrapper.setData(parsedJSON);
-				responseWrapper.setMessage("Successfully parsed Resume!");
-		    }
-			
+			responseWrapper = new ResponseWrapper();
+			responseWrapper.setStatus(200);
+			responseWrapper.setData(parsedJSON);
+			responseWrapper.setMessage("Successfully parsed Resume!");
+		}
+
 		return responseWrapper;
 	}
 

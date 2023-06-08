@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Section {
- private String name;
- private String label;
- private Integer index;
+	private String name;
+	private String label;
+	private Integer index;
 
 }
