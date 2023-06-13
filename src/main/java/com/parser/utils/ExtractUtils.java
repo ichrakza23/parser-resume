@@ -35,7 +35,8 @@ public class ExtractUtils {
 	public static Pattern certificationsPattern = Pattern.compile(RegEx.CERTIFICATIONS.toString());
 	public static Pattern scoresPattern = Pattern.compile(RegEx.SCORES.toString());
 	public static Pattern datePattern = Pattern.compile(RegEx.DATEFROMTO.toString() + "|" + RegEx.DATEFROMT1.toString()
-			+ "|" + RegEx.DATEFORMAT2.toString() + "|" + RegEx.DATEFORMAT3.toString());
+	+ "|" + RegEx.DATEFORMAT2.toString() + "|" + RegEx.DATEFORMAT3.toString()+ "|" +RegEx.DATEFORMAT4.toString());
+	
 	public static Pattern activitiesPattern = Pattern.compile(RegEx.ACTIVITIES.toString());
 	public static Pattern objectivePattern = Pattern.compile(RegEx.OBJECTIVE.toString());
 	public static Pattern membershipPattern = Pattern.compile(RegEx.MEMBERSHIP.toString());

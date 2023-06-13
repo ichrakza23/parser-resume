@@ -27,11 +27,12 @@ public enum RegEx {
 	MEMBERSHIP("\\b(Membership(s?)|MEMBERSHIP(S?))\\b"),
 	ADDITIONAL("\\b(Award(s?)|AWARD(S)|Honor(s?)|HONOR(S?)|Accomplishment(s?)|ACCOMPLISHMENT(S?))\\b"),
 	DATEFROMTO(
-			"([A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{4})(\\s)*(-|à|to)(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
+			"([A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{4})(\\s)*(-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|([A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
 	DATEFROMT1(
-			"([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{0,4})(\\s)*(-|à|to)(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
-	DATEFORMAT2("(\\d{2}/\\d{2})?(\\s)*(-|à|to)(\\s)*(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|(\\d{2}/\\d{2}))"),
-	DATEFORMAT3("[0-9]{4}(\\s)*(-|à|to)(\\b((P|p)resent|(C|c)urrent|(N|n)ow)\\b|([0-9]{4}))"),
+			"([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{0,4})(\\s)*(-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
+	DATEFORMAT2("(\\d{2}/\\d{2})?(\\s)*(-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|(\\d{2}/\\d{2}))"),
+	DATEFORMAT3("[0-9]{4}(\\s)*(-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|([0-9]{4}))"),
+	DATEFORMAT4("([A-Za-zÀ-ÿ,]+\\s*\\d{4})\\s*–\\s*([A-Za-zÀ-ÿ,]+\\s*(\\d{4})?)"),
 	ONLINE("\\b(Online|ONLINE)\\b"), REDUNDANT_TEXT("\\b(\\w+\\s\\w+)\\b(.*\\b\\1\\b)+"),
 	QUALITIES("\\b(Qualités|Qualities|QUALITIES|PERSONAL QUALITIES|Personal (Q|q)ualities)\\b"),
 	VOLUNTARYWORK("\\b(VOLUNTARY EXPERIENCE|Voluntary (E|e)xperience|VOLUNTARY WORK|Voluntary (W|w)ork)\\b"),
