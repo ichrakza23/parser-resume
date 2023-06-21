@@ -7,7 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Experience {
 	private String title;
-	private String description;
+	private String context;
+	private String client;
+	private String role;
+	private String keyWords;
+	private String[] missions;
 	private String period;
+	
 
 }

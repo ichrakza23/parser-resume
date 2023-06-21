@@ -8,16 +8,21 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.json.simple.JSONObject;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.parser.enums.RegEx;
+import com.parser.service.extractor.ExperienceExtractor;
 import com.parser.utils.ExtractUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Service
 @Slf4j
 public class ResumeParserProgram {
+	
+	@Autowired
+	private ExperienceExtractor experienceExtractor;
 
 	/**
 	 * 
@@ -29,21 +34,16 @@ public class ResumeParserProgram {
 
 		JSONObject parsedJSON = new JSONObject();
 		JSONObject profileJSON = new JSONObject();
-		ResumeParserProgram.log.info("Started parsing...");
+		ResumeParserProgram.log.info("Started extractiong informations...");
 		String experience = ExtractUtils.extractSection(cvText, RegEx.EXPERIENCE.name());
 		profileJSON.put("name", ExtractUtils.extractInfo(cvText, ExtractUtils.namePattern));
 		profileJSON.put("phone", ExtractUtils.extractInfo(cvText, ExtractUtils.phonePattern));
 		profileJSON.put("email", ExtractUtils.extractInfo(cvText, ExtractUtils.emailPattern));
-		profileJSON.put("address", ExtractUtils.extractInfo(cvText, ExtractUtils.addressPattern));
-		profileJSON.put("experience", experience);
 		profileJSON.put("education", ExtractUtils.extractSection(cvText, RegEx.EDUCATION.name()));
 		profileJSON.put("languages", ExtractUtils.extractSection(cvText, RegEx.LANGUAGES.name()));
-		profileJSON.put("hobbies", ExtractUtils.extractSection(cvText, RegEx.INTERESTS.name()));
-		profileJSON.put("personalProjects", ExtractUtils.extractSection(cvText, RegEx.PERSONALPROJECTS.name()));
-		profileJSON.put("certifications", ExtractUtils.extractSection(cvText, RegEx.CERTIFICATIONS.name()));
-		profileJSON.put("scores", ExtractUtils.extractSection(cvText, RegEx.SCORES.name()));
-		profileJSON.put("experiences", ExtractUtils.setExperiences(experience));
-
+		profileJSON.put("experiences", experienceExtractor.extractExperience("Project"+experience.trim()));
+		
+		 
 		if (!profileJSON.isEmpty()) {
 			parsedJSON.put("basics", profileJSON);
 		}
@@ -73,27 +73,30 @@ public class ResumeParserProgram {
 		textStripper.getTextForRegion("footer").strip();
 
 		String footer = textStripper.getTextForRegion("footer").strip();
-		boolean hasFooter = currentPageContent.contains(footer);
-		int i = 1;
-		while (i < document.getNumberOfPages() && hasFooter) {
-			i += 1;
-			stripper.setStartPage(i);// Set the starting page
-			stripper.setEndPage(i);// Set the ending page (same as starting page for a single page)
-			currentPageContent = stripper.getText(document);
+		if (footer!=null && !footer.isBlank()) {
+			boolean hasFooter = currentPageContent.contains(footer);
+			int i = 1;
+			while (i < document.getNumberOfPages() && hasFooter) {
+				i += 1;
+				stripper.setStartPage(i);// Set the starting page
+				stripper.setEndPage(i);// Set the ending page (same as starting page for a single page)
+				currentPageContent = stripper.getText(document);
 
-			// Check if the page text matches the footer pattern
-			hasFooter = currentPageContent.contains(footer);
+				// Check if the page text matches the footer pattern
+				hasFooter = currentPageContent.contains(footer);
 
+			}
+
+			if (hasFooter) {
+				ResumeParserProgram.log.info("to modify: " + footer);
+				String newText = pdfContent.replace(footer, " ");
+				ResumeParserProgram.log.info("Original String: " + pdfContent);
+				ResumeParserProgram.log.info("Replaced String: " + newText);
+
+				return newText;
+			}
 		}
-
-		if (hasFooter) {
-			ResumeParserProgram.log.info("to modify: " + footer);
-			String newText = pdfContent.replace(footer, " ");
-			ResumeParserProgram.log.info("Original String: " + pdfContent);
-			ResumeParserProgram.log.info("Replaced String: " + newText);
-
-			return newText;
-		}
+		
 		return pdfContent;
 	}
 

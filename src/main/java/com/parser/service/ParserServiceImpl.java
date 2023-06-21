@@ -17,6 +17,7 @@ import com.parser.ResumeParserProgram;
 import com.parser.utils.DocumentToHtmlConverter;
 import com.parser.wrapper.ResponseWrapper;
 
+
 /**
  * 
  * @author izarati
@@ -25,16 +26,20 @@ import com.parser.wrapper.ResponseWrapper;
 
 @Service
 public class ParserServiceImpl implements ParserService {
+	
+	private static final String userDir="user.dir";
+	private static final String resumesFolder="/Resumes/";
 
 	@Autowired
 	private ResumeParserProgram resumeParserProgram;
+	
 
 	@Override
 	public ResponseWrapper parseResume(MultipartFile file) {
 
-		String uploadedFolder = System.getProperty("user.dir");
+		String uploadedFolder = System.getProperty(userDir);
 		if (uploadedFolder != null && !uploadedFolder.isEmpty()) {
-			uploadedFolder += "/Resumes/";
+			uploadedFolder += resumesFolder;
 		} else
 			throw new RuntimeException("User Directory not found");
 		ResponseWrapper responseWrapper = null;
@@ -68,6 +73,8 @@ public class ParserServiceImpl implements ParserService {
 			try {
 				document = PDDocument.load(filetoExtractData);
 				String content = resumeParserProgram.removeFooterIfExists(document);
+				
+		            
 				parsedJSON = resumeParserProgram.loadData(content);
 			} catch (IOException e) {
 				throw new RuntimeException(e.getMessage());

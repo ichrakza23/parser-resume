@@ -1,6 +1,5 @@
 package com.parser.utils;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -9,8 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.parser.enums.RegEx;
-import com.parser.models.Experience;
-import com.parser.models.Index;
 import com.parser.models.Section;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author izarati
  *
  */
-@Slf4j
 public class ExtractUtils {
 	public static Pattern emailPattern = Pattern.compile(RegEx.EMAIL.toString());
 	public static Pattern phonePattern = Pattern.compile(RegEx.PHONE.toString());
@@ -34,8 +30,6 @@ public class ExtractUtils {
 	public static Pattern personalProjectsPattern = Pattern.compile(RegEx.PERSONALPROJECTS.toString());
 	public static Pattern certificationsPattern = Pattern.compile(RegEx.CERTIFICATIONS.toString());
 	public static Pattern scoresPattern = Pattern.compile(RegEx.SCORES.toString());
-	public static Pattern datePattern = Pattern.compile(RegEx.DATEFROMTO.toString() + "|" + RegEx.DATEFROMT1.toString()
-	+ "|" + RegEx.DATEFORMAT2.toString() + "|" + RegEx.DATEFORMAT3.toString()+ "|" +RegEx.DATEFORMAT4.toString());
 	
 	public static Pattern activitiesPattern = Pattern.compile(RegEx.ACTIVITIES.toString());
 	public static Pattern objectivePattern = Pattern.compile(RegEx.OBJECTIVE.toString());
@@ -165,7 +159,7 @@ public class ExtractUtils {
 		return sortedMap;
 	}
 
-	private static Map<String, Section> putIntoSectionsMapIfMatches(Map<String, Section> sectionsMap, Matcher matcher,
+	public static Map<String, Section> putIntoSectionsMapIfMatches(Map<String, Section> sectionsMap, Matcher matcher,
 			String name) {
 		if (matcher.find()) {
 			sectionsMap.put(name, new Section(name, matcher.group(), Integer.valueOf(matcher.end())));
@@ -193,54 +187,5 @@ public class ExtractUtils {
 		return null;
 	}
 
-	public static java.util.List<Experience> setExperiences(String experience) {
-		Matcher patternMatcher = datePattern.matcher(experience);
-		Index currentIndex;
-		java.util.List<Experience> experiences = new ArrayList<Experience>();
-		Map<Integer, Index> indexes = new HashMap<>();
-		int i = 0;
-		while (patternMatcher.find()) {
-			patternMatcher.group();
-			currentIndex = new Index(patternMatcher.start(), patternMatcher.end());
-			indexes.put(i, currentIndex);
-			i++;
-			ExtractUtils.log.info(patternMatcher.group());
-
-		}
-		Integer startExp = 0;
-		for (Map.Entry<Integer, Index> entry : indexes.entrySet()) {
-
-			Experience exp = new Experience();
-			Integer startNextIndex = indexes.get(entry.getKey() + 1) != null
-					? indexes.get(entry.getKey() + 1).getStartIndex()
-					: null;
-			exp.setTitle(experience.substring(startExp, experience.indexOf("\r\n", entry.getValue().getEndIndex())));
-
-			exp.setPeriod(experience.substring(entry.getValue().getStartIndex(), entry.getValue().getEndIndex()));
-			if (startNextIndex != null) {
-				if (experience.lastIndexOf(".\r\n", startNextIndex) != -1) {
-					exp.setDescription(
-							experience.substring(experience.indexOf("\r\n", entry.getValue().getEndIndex()) + 1,
-									experience.lastIndexOf(".\r\n", startNextIndex)));
-					startExp = experience.lastIndexOf(".\r\n", startNextIndex);
-
-				} else {
-					exp.setDescription(
-							experience.substring(experience.indexOf("\r\n", entry.getValue().getEndIndex()) + 1,
-									experience.lastIndexOf("\r\n", startNextIndex)));
-					startExp = experience.lastIndexOf("\r\n", startNextIndex);
-
-				}
-
-			} else {
-				exp.setDescription(experience.substring(experience.indexOf("\r\n", entry.getValue().getEndIndex()) + 1,
-						experience.length()));
-			}
-			experiences.add(exp);
-
-		}
-
-		return experiences;
-	}
-
+	
 }
