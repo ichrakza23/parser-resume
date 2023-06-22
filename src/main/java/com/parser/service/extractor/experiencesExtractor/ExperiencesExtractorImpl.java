@@ -1,4 +1,4 @@
-package com.parser.service.extractor;
+package com.parser.service.extractor.experiencesExtractor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class ExperienceExtractorImpl implements ExperienceExtractor {
+public class ExperiencesExtractorImpl implements ExperiencesExtractor {
 	public static Pattern datePattern = Pattern.compile(
 			RegEx.DATEFROMTO.toString() + "|" + RegEx.DATEFROMT1.toString() + "|" + RegEx.DATEFORMAT2.toString() + "|"
 					+ RegEx.DATEFORMAT3.toString() + "|" + RegEx.DATEFORMAT4.toString());
@@ -40,7 +40,7 @@ public class ExperienceExtractorImpl implements ExperienceExtractor {
 	public static Pattern technicalSolutionsPattern = Pattern.compile(ExperienceRegex.TECHNICAL_SOLUTIONS.toString());
 
 	@Override
-	public List<Experience> extractExperienceByDate(String experience) {
+	public List<Experience> extractExperiencesByDate(String experience) {
 		Matcher patternMatcher = datePattern.matcher(experience);
 		Index currentIndex;
 		java.util.List<Experience> experiences = new ArrayList<Experience>();
@@ -51,7 +51,7 @@ public class ExperienceExtractorImpl implements ExperienceExtractor {
 			currentIndex = new Index(patternMatcher.start(), patternMatcher.end());
 			indexes.put(i, currentIndex);
 			i++;
-			ExperienceExtractorImpl.log.info(patternMatcher.group());
+			ExperiencesExtractorImpl.log.info(patternMatcher.group());
 
 		}
 		Integer startExp = 0;
@@ -89,7 +89,7 @@ public class ExperienceExtractorImpl implements ExperienceExtractor {
 	}
 
 	@Override
-	public List<Experience> extractExperience(String experience) {
+	public List<Experience> extractExperiences(String experience) {
 
 		Matcher projectMatcher = projectPattern.matcher(experience);
 		Matcher contexteMatcher = contextePattern.matcher(experience);
@@ -137,7 +137,7 @@ public class ExperienceExtractorImpl implements ExperienceExtractor {
 
 			return extractExperienceByKeys(sectionsMap, matcherMap, experience);
 		} else {
-			return extractExperienceByDate(experience);
+			return extractExperiencesByDate(experience);
 		}
 
 	}

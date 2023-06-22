@@ -1,17 +1,17 @@
-package com.parser.service.extractor;
+package com.parser.service.extractor.experiencesExtractor;
 
 import java.util.List;
 
 import com.parser.models.Experience;
 
-public interface ExperienceExtractor {
+public interface ExperiencesExtractor {
 
 	/**
 	 * 
 	 * @param experience
 	 * @return array of experiences based on dates detector
 	 */
-	List<Experience> extractExperienceByDate(String experience);
+	List<Experience> extractExperiencesByDate(String experience);
 
 	/**
 	 * 
@@ -20,6 +20,6 @@ public interface ExperienceExtractor {
 	 *         existing key words we will split experience section by these keys.
 	 *         Otherwise we will split based on date
 	 */
-	List<Experience> extractExperience(String experience);
+	List<Experience> extractExperiences(String experience);
 
 }

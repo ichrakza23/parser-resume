@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.parser.enums.RegEx;
-import com.parser.service.extractor.ExperienceExtractor;
+import com.parser.service.extractor.educationsExtractor.EducationsExtractor;
+import com.parser.service.extractor.experiencesExtractor.ExperiencesExtractor;
 import com.parser.utils.ExtractUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ResumeParserProgram {
 	
 	@Autowired
-	private ExperienceExtractor experienceExtractor;
+	private ExperiencesExtractor experienceExtractor;
+	
+	@Autowired
+	private EducationsExtractor educationsExtractor;
 
 	/**
 	 * 
@@ -37,11 +41,9 @@ public class ResumeParserProgram {
 		ResumeParserProgram.log.info("Started extractiong informations...");
 		String experience = ExtractUtils.extractSection(cvText, RegEx.EXPERIENCE.name());
 		profileJSON.put("name", ExtractUtils.extractInfo(cvText, ExtractUtils.namePattern));
-		profileJSON.put("phone", ExtractUtils.extractInfo(cvText, ExtractUtils.phonePattern));
-		profileJSON.put("email", ExtractUtils.extractInfo(cvText, ExtractUtils.emailPattern));
-		profileJSON.put("education", ExtractUtils.extractSection(cvText, RegEx.EDUCATION.name()));
+		profileJSON.put("education", educationsExtractor.extractEducationsByDate(ExtractUtils.extractSection(cvText, RegEx.EDUCATION.name())));
 		profileJSON.put("languages", ExtractUtils.extractSection(cvText, RegEx.LANGUAGES.name()));
-		profileJSON.put("experiences", experienceExtractor.extractExperience("Project"+experience.trim()));
+		profileJSON.put("experiences", experienceExtractor.extractExperiences("Project"+experience.trim()));
 		
 		 
 		if (!profileJSON.isEmpty()) {
@@ -51,6 +53,7 @@ public class ResumeParserProgram {
 	}
 
 	public String removeFooterIfExists(PDDocument document) throws IOException {
+		ResumeParserProgram.log.info("checking if exists a footer ...");
 		PDFTextStripper stripper = new PDFTextStripper();
 		String pdfContent = stripper.getText(document);
 		stripper.setStartPage(1); // Set the starting page
@@ -88,10 +91,8 @@ public class ResumeParserProgram {
 			}
 
 			if (hasFooter) {
-				ResumeParserProgram.log.info("to modify: " + footer);
+				ResumeParserProgram.log.info("remove footer: " + footer);
 				String newText = pdfContent.replace(footer, " ");
-				ResumeParserProgram.log.info("Original String: " + pdfContent);
-				ResumeParserProgram.log.info("Replaced String: " + newText);
 
 				return newText;
 			}
