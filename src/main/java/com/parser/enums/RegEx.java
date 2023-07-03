@@ -9,7 +9,7 @@ public enum RegEx {
 	EDUCATION(
 			"\\b(FORMATION(S?)|Formation(s?)|(E|É)ducation(s?)|(E|É)DUCATION(S?)|ACADEMIC QUALIFICATION(S?)|Diploma(s?)|DIPLOMA(S?))\\b"),
 	EXPERIENCE(
-			"\\b(Project(s?)|Projet(s?)|Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY|Employment|EXPÉRIENCES P R O F E S S I O N N E L L E S)\\b"),
+			"\\b(Project(s?)|Projet(s?)|Experience(s?)|EXPERIENCE(S?)|Work Experience|WORK EXPERIENCE|Work History|WORK HISTORY|Employment|EXPÉRIENCES P R O F E S S I O N N E L L E S|EXPERIENCES PROFESSIONNELLES)\\b"),
 	SKILLS("\\b(Skill(s?) & Expertise(s?)|Tool(s?) & Technolog(y?|ies?)|Skill(s?)|SKILL(S?)|Technical Skills|TECHNICAL SKILLS|Computer Skill(s?)|COMPETENCE(S?)|COMPÉTENCE(S?)|Skills & Expertise|Expertise|AREAS OF EXPERTISE|Computer Skills|COMPUTER SKILLS)\\b"),
 	PERSONALSKILLS("\\b(PERSONAL SKILLS|Personal Skills)\\b"),
 	PERSONALSUMMARY("\\b(PERSONAL SUMMARY|Personal(S|s)summary|Summary|Introduction)\\b"),

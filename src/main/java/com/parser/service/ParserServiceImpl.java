@@ -17,6 +17,7 @@ import com.parser.ResumeParserProgram;
 import com.parser.utils.DocumentToHtmlConverter;
 import com.parser.wrapper.ResponseWrapper;
 
+import exception.BadFileFormatException;
 
 /**
  * 
@@ -26,16 +27,15 @@ import com.parser.wrapper.ResponseWrapper;
 
 @Service
 public class ParserServiceImpl implements ParserService {
-	
-	private static final String userDir="user.dir";
-	private static final String resumesFolder="/Resumes/";
+
+	private static final String userDir = "user.dir";
+	private static final String resumesFolder = "/Resumes/";
 
 	@Autowired
 	private ResumeParserProgram resumeParserProgram;
-	
 
 	@Override
-	public ResponseWrapper parseResume(MultipartFile file) {
+	public ResponseWrapper parseResume(MultipartFile file) throws BadFileFormatException {
 
 		String uploadedFolder = System.getProperty(userDir);
 		if (uploadedFolder != null && !uploadedFolder.isEmpty()) {
@@ -60,7 +60,8 @@ public class ParserServiceImpl implements ParserService {
 
 		}
 		JSONObject parsedJSON = null;
-		File filetoExtractData = new File(path.toAbsolutePath().toString());
+		File filetoExtractData = new File(
+				DocumentToHtmlConverter.parseToPDFUsingConvertApi(path.toAbsolutePath().toString()));
 		File tikkaConvertedFile = null;
 		try {
 			tikkaConvertedFile = DocumentToHtmlConverter.parseToHTMLUsingApacheTikka(path.toAbsolutePath().toString());
@@ -73,8 +74,7 @@ public class ParserServiceImpl implements ParserService {
 			try {
 				document = PDDocument.load(filetoExtractData);
 				String content = resumeParserProgram.removeFooterIfExists(document);
-				
-		            
+
 				parsedJSON = resumeParserProgram.loadData(content);
 			} catch (IOException e) {
 				throw new RuntimeException(e.getMessage());

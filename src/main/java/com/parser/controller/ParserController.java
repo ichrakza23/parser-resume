@@ -1,6 +1,7 @@
 package com.parser.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.parser.service.ParserService;
 import com.parser.wrapper.ResponseWrapper;
 
+import exception.BadFileFormatException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -28,17 +31,23 @@ public class ParserController {
 			@ApiResponse(responseCode = "401", description = "You are not authorized to view the resource"),
 			@ApiResponse(responseCode = "403", description = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(responseCode = "404", description = "The resource you were trying to reach is not found"),
+			@ApiResponse(responseCode = "415", description = "Format document is not supported!"),
 			@ApiResponse(responseCode = "500", description = "file parsing failure") })
 	@PostMapping(value = "/upload", consumes = { "multipart/form-data" })
 	public ResponseWrapper parseResume(@RequestParam MultipartFile resume) {
 		ResponseWrapper responseWrapper = null;
 		try {
 			responseWrapper = parserService.parseResume(resume);
-		} catch (Exception ex) {
+		} catch (BadFileFormatException ex) {
+			 throw new ResponseStatusException(
+			           HttpStatus.UNSUPPORTED_MEDIA_TYPE, "bad document format!", ex);
+		}
+		catch (Exception ex) {
 			responseWrapper = new ResponseWrapper();
 			responseWrapper.setMessage(ex.getMessage());
 			responseWrapper.setStatus(500);
 			ex.printStackTrace();
+			
 		}
 		return responseWrapper;
 	}
