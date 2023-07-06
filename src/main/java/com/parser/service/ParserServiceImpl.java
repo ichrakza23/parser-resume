@@ -3,6 +3,7 @@ package com.parser.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -18,6 +19,7 @@ import com.parser.utils.DocumentToHtmlConverter;
 import com.parser.wrapper.ResponseWrapper;
 
 import exception.BadFileFormatException;
+import exception.FileHandlerException;
 
 /**
  * 
@@ -35,19 +37,19 @@ public class ParserServiceImpl implements ParserService {
 	private ResumeParserProgram resumeParserProgram;
 
 	@Override
-	public ResponseWrapper parseResume(MultipartFile file) throws BadFileFormatException {
+	public ResponseWrapper parseResume(MultipartFile file) throws NoSuchFileException,FileHandlerException, BadFileFormatException {
 
 		String uploadedFolder = System.getProperty(userDir);
 		if (uploadedFolder != null && !uploadedFolder.isEmpty()) {
 			uploadedFolder += resumesFolder;
 		} else
-			throw new RuntimeException("User Directory not found");
+			throw new NoSuchFileException("User Directory not found");
 		ResponseWrapper responseWrapper = null;
 		byte[] bytes = null;
 		try {
 			bytes = file.getBytes();
 		} catch (IOException exception) {
-			throw new RuntimeException(exception.getMessage());
+			throw new FileHandlerException("An error occurs when trying to read the file");
 		}
 		Path path = null;
 		try {
@@ -56,7 +58,7 @@ public class ParserServiceImpl implements ParserService {
 				Files.createDirectories(path.getParent());
 			path = Files.write(path, bytes);
 		} catch (IOException exception) {
-			throw new RuntimeException(exception.getMessage());
+			throw new FileHandlerException(exception.getMessage());
 
 		}
 		JSONObject parsedJSON = null;
@@ -66,7 +68,7 @@ public class ParserServiceImpl implements ParserService {
 		try {
 			tikkaConvertedFile = DocumentToHtmlConverter.parseToHTMLUsingApacheTikka(path.toAbsolutePath().toString());
 		} catch (SAXException exception) {
-			throw new RuntimeException(exception.getMessage());
+			throw new FileHandlerException("An error occurs when trying to parse the file to html");
 
 		}
 		PDDocument document;
@@ -77,7 +79,7 @@ public class ParserServiceImpl implements ParserService {
 
 				parsedJSON = resumeParserProgram.loadData(content);
 			} catch (IOException e) {
-				throw new RuntimeException(e.getMessage());
+				throw new FileHandlerException("An error occurs when trying to extract data");
 			}
 			responseWrapper = new ResponseWrapper();
 			responseWrapper.setStatus(200);

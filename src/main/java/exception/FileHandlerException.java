@@ -5,11 +5,10 @@ package exception;
  * @author izarati
  *
  */
-public class BadFileFormatException extends Exception {
+public class FileHandlerException extends Exception {
 	private static final long serialVersionUID = 7718828512143293558L;
 
-	public BadFileFormatException(String message) {
+	public FileHandlerException(String message) {
 		super(message);
 	}
-
 }
