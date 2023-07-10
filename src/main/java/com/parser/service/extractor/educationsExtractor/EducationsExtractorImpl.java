@@ -17,7 +17,8 @@ import com.parser.models.Index;
 public class EducationsExtractorImpl implements EducationsExtractor {
 	public static Pattern datePattern = Pattern.compile(
 			RegEx.DATEFROMTO.toString() + "|" + RegEx.DATEFROMT1.toString() + "|" + RegEx.DATEFORMAT2.toString() + "|"
-					+ RegEx.DATEFORMAT3.toString() + "|" + RegEx.DATEFORMAT4.toString()+"|"+RegEx.YearFormat.toString()+ "|" + RegEx.MonthYearFormat.toString());
+					+ RegEx.DATEFORMAT3.toString() + "|" + RegEx.DATEFORMAT4.toString() + "|"
+					+ RegEx.YearFormat.toString() + "|" + RegEx.MonthYearFormat.toString());
 
 	@Override
 	public List<Education> extractEducationsByDate(String education) {
@@ -29,46 +30,47 @@ public class EducationsExtractorImpl implements EducationsExtractor {
 		Map<Integer, Index> indexes = new HashMap<>();
 		int i = 0;
 		boolean isEndPositionText = false;
-		while (patternMatcher.find() ) {
+		while (patternMatcher.find()) {
 			patternMatcher.group();
 			// verify if date in the begin of part or last position
-			if(i==0) {
-				if (patternMatcher.start()==0) isEndPositionText=true;
+			if (i == 0) {
+				if (patternMatcher.start() == 0)
+					isEndPositionText = true;
 			}
 			currentIndex = new Index(patternMatcher.start(), patternMatcher.end());
 			indexes.put(i, currentIndex);
 			i++;
 
 		}
-		int startIndex=0;
+		int startIndex = 0;
 		for (Map.Entry<Integer, Index> entry : indexes.entrySet()) {
 
 			Education partEducation = new Education();
 			Integer startNextIndex = indexes.get(entry.getKey() + 1) != null
 					? indexes.get(entry.getKey() + 1).getStartIndex()
 					: null;
-			
+
 			partEducation
 					.setPeriod(education.substring(entry.getValue().getStartIndex(), entry.getValue().getEndIndex()));
 			if (startNextIndex != null) {
-				if(isEndPositionText) {
-					partEducation.setQualification(
-							education.substring( entry.getValue().getEndIndex(),startNextIndex ));
+				if (isEndPositionText) {
+					partEducation.setQualification(education.substring(entry.getValue().getEndIndex(), startNextIndex));
 				} else {
-					partEducation.setQualification(
-							education.substring( startIndex,entry.getValue().getStartIndex() -1 ));
-					startIndex= entry.getValue().getEndIndex()+1;
+					partEducation
+							.setQualification(education.substring(startIndex, entry.getValue().getStartIndex() - 1));
+					startIndex = entry.getValue().getEndIndex() + 1;
 				}
-				
 
 			} else {
 				if (isEndPositionText) {
-					partEducation.setQualification(education.substring(entry.getValue().getEndIndex(), education.length()));
-				}else {
-					partEducation.setQualification(education.substring(startIndex, entry.getValue().getStartIndex()-1));
-					}
+					partEducation
+							.setQualification(education.substring(entry.getValue().getEndIndex(), education.length()));
+				} else {
+					partEducation
+							.setQualification(education.substring(startIndex, entry.getValue().getStartIndex() - 1));
+				}
 			}
-			
+
 			educationParts.add(partEducation);
 
 		}

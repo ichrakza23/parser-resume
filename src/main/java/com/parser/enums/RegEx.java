@@ -27,11 +27,11 @@ public enum RegEx {
 	MEMBERSHIP("\\b(Membership(s?)|MEMBERSHIP(S?))\\b"),
 	ADDITIONAL("\\b(Award(s?)|AWARD(S)|Honor(s?)|HONOR(S?)|Accomplishment(s?)|ACCOMPLISHMENT(S?))\\b"),
 	DATEFROMTO(
-			"([A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{4})(\\s)*(–|-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|([A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
+			"([A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{4})(\\s)*(–|-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(A|a)ujourd('|’)hui|(C|c)urrent|(N|n)ow)\\b|([A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
 	DATEFROMT1(
-			"([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{0,4})(\\s)*(-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
-	DATEFORMAT2("(\\d{2}/\\d{2})?(\\s)*(–|-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|(\\d{2}/\\d{2}))"),
-	DATEFORMAT3("[0-9]{4}(\\s)*(-|–|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(C|c)urrent|(N|n)ow)\\b|([0-9]{4}))"),
+			"([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*)([0-9]{0,4})(\\s)*(-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(A|a)ujourd('|’)hui|(C|c)urrent|(N|n)ow)\\b|([0-9]{2}(\\s)*[A-Za-zÀ-ÿ,]+(\\s)*([0-9]{0,4})))"),
+	DATEFORMAT2("(\\d{2}/(\\d{2}|\\d{4}))?(\\s)*(–|-|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(A|a)ujourd('|’)hui|(C|c)urrent|(N|n)ow)\\b|(\\d{2}/(\\d{4}|\\d{2})))"),
+	DATEFORMAT3("[0-9]{4}(\\s)*(-|–|à|to)(\\s)*(\\b((P|p)r(e|é)sent|(A|a)ujourd('|’)hui|(C|c)urrent|(N|n)ow)\\b|([0-9]{4}))"),
 	DATEFORMAT4("([A-Za-zÀ-ÿ,]+\\s*\\d{4})\\s*(–|–)\\s*([A-Za-zÀ-ÿ,]+\\s*(\\d{4})?)"),
 	YearFormat("\\b(19\\d{2}|20\\d{2}|2100)\\b"),
 	MonthYearFormat("\\b(?:January|February|March|April|May|June|July|August|September(e?)|October(e?)|November(e?)|D(é|e)cember(e?)|Janvier|Février|Mars|Avril|Mai|Juin|Juillet|Août|Novembre)+\\s*(19\\d{2}|20\\d{2}|2100)\\b"),

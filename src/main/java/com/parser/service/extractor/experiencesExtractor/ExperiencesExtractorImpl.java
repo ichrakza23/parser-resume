@@ -38,6 +38,7 @@ public class ExperiencesExtractorImpl implements ExperiencesExtractor {
 	public static Pattern projectContextPattern = Pattern.compile(ExperienceRegex.PROJECT_CONTEXTE.toString());
 	public static Pattern rolePattern = Pattern.compile(ExperienceRegex.ROLE.toString());
 	public static Pattern technicalSolutionsPattern = Pattern.compile(ExperienceRegex.TECHNICAL_SOLUTIONS.toString());
+	public static Pattern missionsWithNoKeysPattern = Pattern.compile(ExperienceRegex.MISSIONS_WITH_NO_KEYS.toString());
 
 	@Override
 	public List<Experience> extractExperiencesByDate(String experience) {
@@ -100,7 +101,6 @@ public class ExperiencesExtractorImpl implements ExperiencesExtractor {
 		Matcher projectContextMatcher = projectContextPattern.matcher(experience);
 		Matcher roleMatcher = rolePattern.matcher(experience);
 		Matcher technicalSolutionsMatcher = technicalSolutionsPattern.matcher(experience);
-
 		Map<String, Matcher> matcherMap = new HashMap<String, Matcher>() {
 			/**
 			 * 
@@ -133,6 +133,7 @@ public class ExperiencesExtractorImpl implements ExperiencesExtractor {
 						|| sectionsMap.get().keySet().contains(ExperienceRegex.FEATURES.name())
 						|| sectionsMap.get().keySet().contains(ExperienceRegex.CLIENT.name())
 						|| sectionsMap.get().keySet().contains(ExperienceRegex.ACHIEVEMENTS.name())
+						|| sectionsMap.get().keySet().contains(ExperienceRegex.MISSIONS_WITH_NO_KEYS.name())
 						|| sectionsMap.get().keySet().contains(ExperienceRegex.ROLE.name()))) {
 
 			return extractExperienceByKeys(sectionsMap, matcherMap, experience);
@@ -222,7 +223,26 @@ public class ExperiencesExtractorImpl implements ExperiencesExtractor {
 						break;
 					case PROJECT_CONTEXTE:
 					case CONTEXTE:
-						exp.setContext(exp.getContext() != null ? exp.getContext() + " " + part : part);
+						if (!sortedMap.containsKey(ExperienceRegex.FEATURES.name())
+								&& !sortedMap.containsKey(ExperienceRegex.ACHIEVEMENTS.name())) {
+							Matcher missionsWithNoKeysMatcher = missionsWithNoKeysPattern.matcher(part);
+							String missions = "";
+							int startMissions = 0;
+							int index = 0;
+							while (missionsWithNoKeysMatcher.find()) {
+								missions = missions + "-" + missionsWithNoKeysMatcher.group();
+								if (index == 0) {
+									startMissions = Integer.valueOf(missionsWithNoKeysMatcher.start());
+								}
+								index++;
+							}
+							missions.trim().replaceFirst("^.*?(?=[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ])", "");
+							exp.setMissions(missions.split("-"));
+							exp.setContext( part.substring(0, startMissions));
+						} else {
+							exp.setContext(exp.getContext() != null ? exp.getContext() + " " + part : part);
+
+						}
 						break;
 					case FEATURES:
 					case ACHIEVEMENTS:
